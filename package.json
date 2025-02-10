@@ -4,7 +4,9 @@
     "description": "Hello World API using AWS Lambda with TypeScript",
     "main": "dist/index.js",
     "scripts": {
-        "build": "tsc",
+        "build": "npm run build:lambda && npm run build:cdk",
+        "build:cdk": "tsc",
+        "build:lambda": "tsc -p lambda/tsconfig.json",
         "test": "vitest",
         "cdk": "cdk",
         "deploy": "cdk deploy",
@@ -15,7 +17,8 @@
         "@aws-sdk/lib-dynamodb": "3.744.0",
         "@types/aws-lambda": "^8.10.130",
         "aws-cdk-lib": "^2.124.0",
-        "constructs": "^10.3.0"
+        "constructs": "^10.3.0",
+        "test": "^3.3.0"
     },
     "devDependencies": {
         "@types/jest": "^29.5.14",

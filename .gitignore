@@ -6,3 +6,4 @@ dist/
 *.d.ts
 !jest.config.js
 cdk.out/
+.DS_Store

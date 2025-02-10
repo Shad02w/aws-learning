@@ -20,7 +20,7 @@ export class HelloWorldStack extends cdk.Stack {
         const helloFunction = new lambda.Function(this, 'HelloWorldFunction', {
             runtime: lambda.Runtime.NODEJS_22_X,
             handler: 'index.handler',
-            code: lambda.Code.fromAsset(path.join(__dirname, '../lambda')),
+            code: lambda.Code.fromAsset(path.join(__dirname, '../dist/lambda')),
             environment: {
                 TABLE_NAME: table.tableName
             }

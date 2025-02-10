@@ -1,8 +1,29 @@
 import { describe, it, expect } from 'vitest'
-import { UpdateCommand } from '@aws-sdk/lib-dynamodb'
+import { UpdateCommand, DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb'
 import { ddbMock } from '../vitest.setup'
-import { handler } from './index'
+import { handler, incrementReadCount } from './index'
 import type { APIGatewayProxyEvent } from 'aws-lambda'
+
+describe('incrementCounter', () => {
+    it('should increment counter correctly', async () => {
+        ddbMock.on(UpdateCommand).resolves({
+            Attributes: {
+                readCount: 42
+            }
+        })
+
+        const result = await incrementReadCount(ddbMock as unknown as DynamoDBDocumentClient)
+        expect(result.readCount).toBe(42)
+
+        const calls = ddbMock.calls()
+        expect(calls).toHaveLength(1)
+        expect(calls[0].args[0].input).toMatchObject({
+            TableName: process.env.TABLE_NAME,
+            Key: { id: 'visit-counter' },
+            UpdateExpression: 'SET readCount = if_not_exists(readCount, :start) + :inc'
+        })
+    })
+})
 
 describe('Lambda Handler', () => {
     it('should increment counter and return 200', async () => {
